@@ -1,0 +1,5 @@
+C:\Users\Сергей\Desktop\Search-and-compare-system\receiving a reference image\receiving a references image\receiving a references image\bin\Debug\receiving a references image.exe.config
+C:\Users\Сергей\Desktop\Search-and-compare-system\receiving a reference image\receiving a references image\receiving a references image\bin\Debug\receiving a references image.exe
+C:\Users\Сергей\Desktop\Search-and-compare-system\receiving a reference image\receiving a references image\receiving a references image\bin\Debug\receiving a references image.pdb
+C:\Users\Сергей\Desktop\Search-and-compare-system\receiving a reference image\receiving a references image\receiving a references image\obj\Debug\receiving a references image.exe
+C:\Users\Сергей\Desktop\Search-and-compare-system\receiving a reference image\receiving a references image\receiving a references image\obj\Debug\receiving a references image.pdb
