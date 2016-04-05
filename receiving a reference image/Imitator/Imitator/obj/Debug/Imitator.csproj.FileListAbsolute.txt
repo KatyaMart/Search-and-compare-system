@@ -4,3 +4,9 @@ C:\Users\Сергей\Desktop\Search-and-compare-system\receiving a reference im
 C:\Users\Сергей\Desktop\Search-and-compare-system\receiving a reference image\Imitator\Imitator\obj\Debug\Imitator.csprojResolveAssemblyReference.cache
 C:\Users\Сергей\Desktop\Search-and-compare-system\receiving a reference image\Imitator\Imitator\obj\Debug\Imitator.exe
 C:\Users\Сергей\Desktop\Search-and-compare-system\receiving a reference image\Imitator\Imitator\obj\Debug\Imitator.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system-master\receiving a reference image\Imitator\Imitator\bin\Debug\Imitator.exe.config
+C:\Users\Sergey\Desktop\Search-and-compare-system-master\receiving a reference image\Imitator\Imitator\obj\Debug\Imitator.exe
+C:\Users\Sergey\Desktop\Search-and-compare-system-master\receiving a reference image\Imitator\Imitator\obj\Debug\Imitator.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system-master\receiving a reference image\Imitator\Imitator\bin\Debug\Imitator.exe
+C:\Users\Sergey\Desktop\Search-and-compare-system-master\receiving a reference image\Imitator\Imitator\bin\Debug\Imitator.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system-master\receiving a reference image\Imitator\Imitator\obj\Debug\Imitator.csprojResolveAssemblyReference.cache

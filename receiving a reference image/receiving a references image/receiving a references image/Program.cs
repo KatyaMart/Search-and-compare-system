@@ -26,7 +26,58 @@ namespace TCPServer
                 {
                     Socket handler = sListener.Accept();
                     string data = null;
-                    byte[] bytes = new byte[102400];
+                    byte[] bytes = new byte[1024];
+                    int bytesRec = handler.Receive(bytes);
+
+                    int log_len = (int)bytes[0];
+                    string login_auth = Encoding.UTF8.GetString(bytes, 1, log_len);
+                    string password_auth = Encoding.UTF8.GetString(bytes, log_len + 2, (int)bytes[log_len + 1]);
+                    //data += Encoding.UTF8.GetString(bytes, 0, bytesRec);
+                    byte[] ans = new byte[1];
+                    if (login_auth == "ddf" && password_auth == "1234")
+                    {
+
+                        ans[0] = 1;
+                        handler.Send(ans);
+                        byte[] buffer = new byte[1048576];
+                        byte[] shifr = new byte[1];
+                        NetworkStream ns = new NetworkStream(handler);
+                        ns.Read(shifr, 0, 1);
+                        ns.Read(buffer, 0, 1024 * 1024 - 1);
+
+
+                        int i = 0;
+                        int leng = BitConverter.ToInt32(buffer, 0);
+                        string login = Encoding.UTF8.GetString(buffer, 0 + sizeof(int), leng);
+                        i += leng + sizeof(int);
+                        leng = BitConverter.ToInt32(buffer, i);
+                        i += sizeof(int);
+                        string password = Encoding.UTF8.GetString(buffer, i, leng);
+                        i += leng;
+                        byte priznak = buffer[i];
+                        i++;
+                        double accurancy = 0.0f;
+                        if (priznak != 1)
+                        {
+                            i++;
+                            accurancy = BitConverter.ToDouble(buffer, i);
+                            i += sizeof(double);
+                        }
+                        leng = BitConverter.ToInt32(buffer, i);
+                        i += sizeof(int);
+
+                        MemoryStream ms = new MemoryStream();
+                        ms.Write(buffer, i, leng);
+                        Image img = Image.FromStream(ms);
+                        img.Save(@"result.png", System.Drawing.Imaging.ImageFormat.Png);
+
+                        Console.WriteLine("Логин: " + login);
+                        Console.WriteLine("Пароль:" + password);
+                        Console.WriteLine("Вид результата: " + priznak);
+                        Console.WriteLine("Точность" + accurancy);
+                        Console.WriteLine("Размер картинки" + leng);
+                    }
+                    /*byte[] bytes = new byte[102400];
                     int bytesRec = handler.Receive(bytes);
 
                     int log_len = (int)bytes[0];
