@@ -1,0 +1,4 @@
+E:\SCSYS\Imitator_rec\Imitator_rec\bin\Release\Imitator_rec.exe
+E:\SCSYS\Imitator_rec\Imitator_rec\bin\Release\Imitator_rec.pdb
+E:\SCSYS\Imitator_rec\Imitator_rec\obj\x86\Release\Imitator_rec.exe
+E:\SCSYS\Imitator_rec\Imitator_rec\obj\x86\Release\Imitator_rec.pdb

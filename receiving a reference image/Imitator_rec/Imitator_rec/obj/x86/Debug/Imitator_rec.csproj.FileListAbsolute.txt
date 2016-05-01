@@ -1,0 +1,11 @@
+c:\users\smile\documents\visual studio 2010\Projects\Imitator_rec\Imitator_rec\bin\Debug\Imitator_rec.exe
+c:\users\smile\documents\visual studio 2010\Projects\Imitator_rec\Imitator_rec\bin\Debug\Imitator_rec.pdb
+c:\users\smile\documents\visual studio 2010\Projects\Imitator_rec\Imitator_rec\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\smile\documents\visual studio 2010\Projects\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.exe
+c:\users\smile\documents\visual studio 2010\Projects\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.pdb
+G:\SCSYS\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.exe
+G:\SCSYS\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.pdb
+E:\SCSYS\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.exe
+E:\SCSYS\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.pdb
+E:\SCSYS\Imitator_rec\Imitator_rec\bin\Debug\Imitator_rec.exe
+E:\SCSYS\Imitator_rec\Imitator_rec\bin\Debug\Imitator_rec.pdb

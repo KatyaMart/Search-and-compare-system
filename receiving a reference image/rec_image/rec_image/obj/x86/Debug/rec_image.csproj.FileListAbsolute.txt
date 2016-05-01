@@ -1,0 +1,11 @@
+c:\users\smile\documents\visual studio 2010\Projects\rec_image\rec_image\bin\Debug\rec_image.exe
+c:\users\smile\documents\visual studio 2010\Projects\rec_image\rec_image\bin\Debug\rec_image.pdb
+c:\users\smile\documents\visual studio 2010\Projects\rec_image\rec_image\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\smile\documents\visual studio 2010\Projects\rec_image\rec_image\obj\x86\Debug\rec_image.exe
+c:\users\smile\documents\visual studio 2010\Projects\rec_image\rec_image\obj\x86\Debug\rec_image.pdb
+G:\SCSYS\rec_image\rec_image\obj\x86\Debug\rec_image.exe
+G:\SCSYS\rec_image\rec_image\obj\x86\Debug\rec_image.pdb
+E:\SCSYS\rec_image\rec_image\obj\x86\Debug\rec_image.exe
+E:\SCSYS\rec_image\rec_image\obj\x86\Debug\rec_image.pdb
+E:\SCSYS\rec_image\rec_image\bin\Debug\rec_image.exe
+E:\SCSYS\rec_image\rec_image\bin\Debug\rec_image.pdb

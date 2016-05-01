@@ -1,0 +1,18 @@
+c:\users\smile\documents\visual studio 2010\Projects\HttpServer\HttpServer\bin\Debug\HttpServer.exe
+c:\users\smile\documents\visual studio 2010\Projects\HttpServer\HttpServer\bin\Debug\HttpServer.pdb
+c:\users\smile\documents\visual studio 2010\Projects\HttpServer\HttpServer\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\smile\documents\visual studio 2010\Projects\HttpServer\HttpServer\obj\x86\Debug\HttpServer.Form1.resources
+c:\users\smile\documents\visual studio 2010\Projects\HttpServer\HttpServer\obj\x86\Debug\HttpServer.Properties.Resources.resources
+c:\users\smile\documents\visual studio 2010\Projects\HttpServer\HttpServer\obj\x86\Debug\GenerateResource.read.1.tlog
+c:\users\smile\documents\visual studio 2010\Projects\HttpServer\HttpServer\obj\x86\Debug\GenerateResource.write.1.tlog
+c:\users\smile\documents\visual studio 2010\Projects\HttpServer\HttpServer\obj\x86\Debug\HttpServer.exe
+c:\users\smile\documents\visual studio 2010\Projects\HttpServer\HttpServer\obj\x86\Debug\HttpServer.pdb
+G:\SCSYS\HttpServer\HttpServer\obj\x86\Debug\HttpServer.exe
+G:\SCSYS\HttpServer\HttpServer\obj\x86\Debug\HttpServer.pdb
+E:\SCSYS\HttpServer\HttpServer\obj\x86\Debug\HttpServer.exe
+E:\SCSYS\HttpServer\HttpServer\obj\x86\Debug\HttpServer.pdb
+E:\SCSYS\HttpServer\HttpServer\bin\Debug\HttpServer.exe
+E:\SCSYS\HttpServer\HttpServer\bin\Debug\HttpServer.pdb
+E:\SCSYS\HttpServer\HttpServer\obj\x86\Debug\HttpServer.Form1.resources
+E:\SCSYS\HttpServer\HttpServer\obj\x86\Debug\HttpServer.Properties.Resources.resources
+E:\SCSYS\HttpServer\HttpServer\obj\x86\Debug\HttpServer.csproj.GenerateResource.Cache
