@@ -1,0 +1,17 @@
+c:\users\smile\documents\visual studio 2010\Projects\HttpServerForResult\HttpServerForResult\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\smile\documents\visual studio 2010\Projects\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.Properties.Resources.resources
+c:\users\smile\documents\visual studio 2010\Projects\HttpServerForResult\HttpServerForResult\obj\x86\Debug\GenerateResource.read.1.tlog
+c:\users\smile\documents\visual studio 2010\Projects\HttpServerForResult\HttpServerForResult\obj\x86\Debug\GenerateResource.write.1.tlog
+c:\users\smile\documents\visual studio 2010\Projects\HttpServerForResult\HttpServerForResult\bin\Debug\HttpServerForResult.exe
+c:\users\smile\documents\visual studio 2010\Projects\HttpServerForResult\HttpServerForResult\bin\Debug\HttpServerForResult.pdb
+c:\users\smile\documents\visual studio 2010\Projects\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.exe
+c:\users\smile\documents\visual studio 2010\Projects\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.pdb
+c:\users\smile\documents\visual studio 2010\Projects\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.Form1.resources
+C:\Users\Сергей\Desktop\transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.exe
+C:\Users\Сергей\Desktop\transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.pdb
+C:\Users\Сергей\Desktop\transfer\HttpServerForResult\HttpServerForResult\bin\Debug\HttpServerForResult.exe
+C:\Users\Сергей\Desktop\transfer\HttpServerForResult\HttpServerForResult\bin\Debug\HttpServerForResult.pdb
+C:\Users\Сергей\Desktop\transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.csprojResolveAssemblyReference.cache
+C:\Users\Сергей\Desktop\transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.Form1.resources
+C:\Users\Сергей\Desktop\transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.Properties.Resources.resources
+C:\Users\Сергей\Desktop\transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.csproj.GenerateResource.Cache

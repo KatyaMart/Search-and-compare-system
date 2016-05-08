@@ -1,0 +1,10 @@
+c:\users\smile\documents\visual studio 2010\Projects\ImitatorForTransferResult\ImitatorForTransferResult\bin\Debug\ImitatorForTransferResult.exe
+c:\users\smile\documents\visual studio 2010\Projects\ImitatorForTransferResult\ImitatorForTransferResult\bin\Debug\ImitatorForTransferResult.pdb
+c:\users\smile\documents\visual studio 2010\Projects\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\smile\documents\visual studio 2010\Projects\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.exe
+c:\users\smile\documents\visual studio 2010\Projects\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.pdb
+C:\Users\Сергей\Desktop\transfer\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.exe
+C:\Users\Сергей\Desktop\transfer\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.pdb
+C:\Users\Сергей\Desktop\transfer\ImitatorForTransferResult\ImitatorForTransferResult\bin\Debug\ImitatorForTransferResult.exe
+C:\Users\Сергей\Desktop\transfer\ImitatorForTransferResult\ImitatorForTransferResult\bin\Debug\ImitatorForTransferResult.pdb
+C:\Users\Сергей\Desktop\transfer\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.csprojResolveAssemblyReference.cache

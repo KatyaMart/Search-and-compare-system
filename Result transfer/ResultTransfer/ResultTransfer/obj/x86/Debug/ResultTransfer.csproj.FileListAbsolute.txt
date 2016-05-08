@@ -1,0 +1,10 @@
+c:\users\smile\documents\visual studio 2010\Projects\ResultTransfer\ResultTransfer\bin\Debug\ResultTransfer.exe
+c:\users\smile\documents\visual studio 2010\Projects\ResultTransfer\ResultTransfer\bin\Debug\ResultTransfer.pdb
+c:\users\smile\documents\visual studio 2010\Projects\ResultTransfer\ResultTransfer\obj\x86\Debug\ResolveAssemblyReference.cache
+c:\users\smile\documents\visual studio 2010\Projects\ResultTransfer\ResultTransfer\obj\x86\Debug\ResultTransfer.exe
+c:\users\smile\documents\visual studio 2010\Projects\ResultTransfer\ResultTransfer\obj\x86\Debug\ResultTransfer.pdb
+C:\Users\Сергей\Desktop\transfer\ResultTransfer\ResultTransfer\obj\x86\Debug\ResultTransfer.exe
+C:\Users\Сергей\Desktop\transfer\ResultTransfer\ResultTransfer\obj\x86\Debug\ResultTransfer.pdb
+C:\Users\Сергей\Desktop\transfer\ResultTransfer\ResultTransfer\bin\Debug\ResultTransfer.exe
+C:\Users\Сергей\Desktop\transfer\ResultTransfer\ResultTransfer\bin\Debug\ResultTransfer.pdb
+C:\Users\Сергей\Desktop\transfer\ResultTransfer\ResultTransfer\obj\x86\Debug\ResultTransfer.csprojResolveAssemblyReference.cache
