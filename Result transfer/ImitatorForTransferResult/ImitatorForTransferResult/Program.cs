@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace Imitator_for_transfer_result
 {
@@ -12,12 +13,24 @@ namespace Imitator_for_transfer_result
     {
         static void Main(string[] args)
         {
+            Thread t = new Thread(Listen2msg);
+            t.Start();
+            
             IPHostEntry ipHost = Dns.GetHostEntry("localhost");
             IPAddress ipAddr = ipHost.AddressList[1];
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11001);
 
             Socket sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            sender.Connect(ipEndPoint);
+            try
+            {
+                sender.Connect(ipEndPoint);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Невозможно подключиться к серверу!");
+                Console.ReadLine();
+                return;
+            }
 
             List<byte> list_byte = new List<byte>();
             list_byte.Add(0);           //Шифрование
@@ -112,6 +125,42 @@ namespace Imitator_for_transfer_result
 
             sender.Close();
             Console.ReadLine();
+        }
+        static void Listen2msg()
+        {
+            IPHostEntry ipHost = Dns.GetHostEntry("localhost");
+            IPAddress ipAddr = ipHost.AddressList[1];
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11002);
+            TcpListener listener = new TcpListener(ipEndPoint);
+            listener.Start();
+
+            try
+            {
+                Socket handler = listener.AcceptSocket();
+                byte[] bytes = new byte[10240];
+                int bytesRec = handler.Receive(bytes);
+                if (bytes[1] == 2)
+                {
+                    int i=2;
+                    string login = Encoding.UTF8.GetString(bytes,i+1,bytes[i]);
+                    i += login.Length + 1;
+                    Console.WriteLine("Пользователь "+login+" добавид результаты:");
+                    while(i<bytesRec)
+                    {
+                        string refer = Encoding.UTF8.GetString(bytes, i + 1, bytes[i]);
+                        i += refer.Length + 1;
+                        Console.WriteLine(refer);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Посторонее сообщение");
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

@@ -45,7 +45,23 @@ namespace HttpServerForResult
                     {
                         DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ResultsQuery));
                         ResultsQuery newQuery = (ResultsQuery)ser.ReadObject(body);
-                        if (newQuery.neededUser != null)
+                        if (newQuery.password == null)
+                        {
+                            IpsAnswer ans = new IpsAnswer();
+                            long[] addrs = getIPs(newQuery.login);
+                            HttpListenerResponse response = context.Response;
+                            response.ContentType = "application/json";
+                            MemoryStream stream = new MemoryStream();
+                            ser = new DataContractJsonSerializer(typeof(IpsAnswer));
+                            ser.WriteObject(stream, ans);
+                            response.ContentLength64 = stream.Length;
+                            using (Stream output = response.OutputStream)
+                            {
+                                output.Write(stream.ToArray(), 0, (Int32)stream.Length);
+                                //this.Text = "Ответ отправлен: " + ans.results.Length;
+                            }
+                        }
+                        else if (newQuery.neededUser != null)
                         {
                             ResultsAnswer ans = new ResultsAnswer();
                             if ((newQuery.login == "Sergey" && newQuery.password == "Dunaev") || (newQuery.login == "Katya" && newQuery.password == "Martynova"))
@@ -105,16 +121,16 @@ namespace HttpServerForResult
         }
         private Dictionary<int, string> getSubscribes(string login)
         {
-            Dictionary<int,string> subs = new Dictionary<int,string>();
+            Dictionary<int, string> subs = new Dictionary<int, string>();
             if (login == "Sergey")
             {
-                subs.Add(321,"Katya");
+                subs.Add(321, "Katya");
                 subs.Add(1001, "Gleb Andreevich");
                 subs.Add(4071, "Alexey");
             }
-            else if(login == "Katya")
+            else if (login == "Katya")
             {
-                subs.Add(322,"Sergey");
+                subs.Add(322, "Sergey");
                 subs.Add(1001, "Gleb Andreevich");
                 subs.Add(4071, "Alexey");
                 subs.Add(677, "Oleg");
@@ -148,6 +164,34 @@ namespace HttpServerForResult
                 return results.ToArray();
             return null;
         }
+        private long[] getIPs(string login)
+        {
+            long[] addrs = null;
+            if (login == "Sergey")
+            {
+                addrs = new long[2];
+                byte[] bytes = { 192,168,60,25};
+                IPAddress addr = new IPAddress(bytes);
+                addrs[0] = addr.Address;
+                byte[] bytes1 = { 192, 168, 60, 144 };
+                addr = new IPAddress(bytes1);
+                addrs[1] = addr.Address;
+            }
+            else if (login == "Katya")
+            {
+                addrs = new long[3];
+                byte[] bytes = { 192, 168, 60, 25 };
+                IPAddress addr = new IPAddress(bytes);
+                addrs[0] = addr.Address;
+                byte[] bytes1 = { 192, 168, 60, 121 };
+                addr = new IPAddress(bytes1);
+                addrs[1] = addr.Address;
+                byte[] bytes2 = { 192, 168, 60, 54 };
+                addr = new IPAddress(bytes2);
+                addrs[2] = addr.Address;
+            }
+            return addrs;
+        }
     }
     public class ListSubAnswer
     {
@@ -169,5 +213,13 @@ namespace HttpServerForResult
         public string login;
         public string password;
         public string neededUser;
+    }
+    public class IpsQuery
+    {
+        public string login;
+    }
+    public class IpsAnswer
+    {
+        public long[] address;
     }
 }

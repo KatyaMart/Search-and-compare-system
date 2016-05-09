@@ -47,7 +47,7 @@ namespace HttpServer
                         DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Query));
                         Query newQuery = (Query)ser.ReadObject(body);
                         Answer ans = new Answer();
-                        if ((newQuery.login == "Sergey" && newQuery.password == "Dunaev") || (newQuery.login == "Katya" && newQuery.password == "Martynova"))
+                        if ((newQuery.login == "Katya" && newQuery.password == "Martynova")||(newQuery.login == "Sergey" && newQuery.password == "Dunaev"))
                             ans.answer = 1;
                         else
                             ans.answer = 0;

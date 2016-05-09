@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
@@ -14,6 +15,8 @@ namespace Result_Transfer
     {
         static void Main(string[] args)
         {
+            Thread t = new Thread(ListenCompareSystem);
+            t.Start();
             IPHostEntry ipHost = Dns.GetHostEntry("localhost");
             IPAddress ipAddr = ipHost.AddressList[1];
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11001);
@@ -106,24 +109,7 @@ namespace Result_Transfer
                             Console.WriteLine("Доступ запрещен");
                         }
                     }
-                    //======================2 тип сообщения===============================
-                    /*foreach(IPAddress addr in addr_list)
-                    {
-                        List<string> references = new List<string>();
-                        List<byte> msg_list = new List<byte>();
-                        msg_list.Add(2);
-                        foreach (string refer in references)
-                        {
-                            msg_list.AddRange(BitConverter.GetBytes(refer.Length));
-                            msg_list.AddRange(Encoding.UTF8.GetBytes(refer));
-                        }
-                        byte[] msg = msg_list.ToArray();
-                        //шифрование
-
-                        int bytesSend = handler.Send(msg);
-                        if (bytesSend < msg.Length)
-                            Console.WriteLine("Сообщение передалось не полностью!");
-                    }*/
+                    
 
 
 
@@ -144,6 +130,58 @@ namespace Result_Transfer
                 }
             }
             
+        }
+        static void ListenCompareSystem()
+        {
+            IPHostEntry ipHost = Dns.GetHostEntry("localhost");
+            IPAddress ipAddr = ipHost.AddressList[1];
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11003);
+            TcpListener listener = new TcpListener(ipEndPoint);
+            listener.Start();
+            while (true)
+            {
+                try
+                {
+                    Socket handler = listener.AcceptSocket();
+                    byte[] bytes = new byte[1024];
+                    int bytesRec = handler.Receive(bytes);
+
+                    int leng = bytes[0];
+                    string login = Encoding.UTF8.GetString(bytes,1,leng);
+                    long[] address = GetIpAddress(login);
+                    List<byte> msgList = new List<byte>();
+                    msgList.Add((byte)0);
+                    msgList.Add((byte)2);
+                    msgList.AddRange(bytes);
+                    if(address != null)
+                    {
+                        foreach(long receiver in address)
+                        {
+                            IPAddress addr = new IPAddress(receiver);
+                            IPEndPoint receiverEndPoint = new IPEndPoint(ipAddr, 11002);
+                            try
+                            {
+                                Socket sender = new Socket(addr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                                sender.Connect(receiverEndPoint);
+                                int byteSends = sender.Send(msgList.ToArray());
+                                if (byteSends < msgList.Count)
+                                    Console.WriteLine("Сообщение для " + addr.ToString() + "отправлено неполностью");
+                                sender.Close();
+                            }
+                            catch(Exception ex)
+                            {
+                                Console.WriteLine(ipAddr.ToString() + "недоступен!");
+                            }
+                        }
+                    }
+                    msgList.Clear();
+                    handler.Close();
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
         }
         static Dictionary<int,string> GetSubs(string login, string pass,out bool access)
         {
@@ -202,6 +240,32 @@ namespace Result_Transfer
                 return ans.results;
             }
         }
+        static long[] GetIpAddress(string login)
+        {
+            string url = "http://localhost:12001/httpserver/";
+            IpsQuery newQuery = new IpsQuery();
+            newQuery.login = login;
+            MemoryStream stream = new MemoryStream();
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(IpsQuery));
+            ser.WriteObject(stream, newQuery);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.ContentLength = stream.Length;
+            using (Stream postStream = request.GetRequestStream())
+            {
+                postStream.Write(stream.ToArray(), 0, (Int32)stream.Length);
+                postStream.Close();
+            }
+            using (HttpWebResponse responce = (HttpWebResponse)request.GetResponse())
+            {
+                Stream s = responce.GetResponseStream();
+                ser = new DataContractJsonSerializer(typeof(IpsAnswer));
+                IpsAnswer ans = (IpsAnswer)ser.ReadObject(s);
+                responce.Close();
+                return ans.address;
+            }
+        }
     }
     public class ListSubsAnswer
     {
@@ -223,5 +287,14 @@ namespace Result_Transfer
         public string login;
         public string password;
         public string neededUser;
+    }
+    public class IpsAnswer
+    {
+        public long[] address;
+    }
+    public class IpsQuery
+    {
+        public string login;
+        
     }
 }

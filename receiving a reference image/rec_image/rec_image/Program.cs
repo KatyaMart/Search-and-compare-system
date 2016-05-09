@@ -16,34 +16,43 @@ namespace TCPServer
         static void Main(string[] args)
         {
             IPHostEntry ipHost = Dns.GetHostEntry("localhost");
-            IPAddress ipAddr = ipHost.AddressList[0];
+            IPAddress ipAddr = ipHost.AddressList[1];
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11000);
+            TcpListener listener = new TcpListener(ipEndPoint);
+            listener.Start();
 
-            Socket sListener = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            try
+            IPHostEntry CompareSysHost = Dns.GetHostEntry("localhost");
+            IPAddress CompareSysAddr = ipHost.AddressList[1];
+            IPEndPoint CompareSysEndPoint = new IPEndPoint(ipAddr, 11004);
+            Socket handler = null;
+            while (true)
             {
-                sListener.Bind(ipEndPoint);
-                sListener.Listen(10);
-                while (true)
+                try
                 {
-                    Socket handler = sListener.Accept();
                     string data = null;
                     byte[] bytes = new byte[1024];
-                    int bytesRec = handler.Receive(bytes);
+                    byte[] shifr = new byte[1];
+                    handler = listener.AcceptSocket();
+                    NetworkStream ns = new NetworkStream(handler);
+                    ns.Read(shifr, 0, 1);
+                    ns.Read(bytes, 0, 1024 - 1);
 
-                    int log_len = (int)bytes[0];
-                    string login_auth = Encoding.UTF8.GetString(bytes, 1, log_len);
-                    string password_auth = Encoding.UTF8.GetString(bytes, log_len + 2, (int)bytes[log_len + 1]);
+                    int log_len = BitConverter.ToInt32(bytes, 0);
+                    int index = 4;
+                    string login_auth = Encoding.UTF8.GetString(bytes, 4, log_len);
+                    index += log_len;
+                    int password_leng = BitConverter.ToInt32(bytes, index);
+                    string password_auth = Encoding.UTF8.GetString(bytes, index + 4, password_leng);
                     byte[] ans = new byte[1];
-                    int signed = signIn(login_auth,password_auth);
+                    int signed = signIn(login_auth, password_auth);
                     if (signed == 1)
                     {
 
                         ans[0] = 1;
                         handler.Send(ans);
                         byte[] buffer = new byte[1048576];
-                        byte[] shifr = new byte[1];
-                        NetworkStream ns = new NetworkStream(handler);
+                        shifr = new byte[1];
+                        ns = new NetworkStream(handler);
                         ns.Read(shifr, 0, 1);
                         ns.Read(buffer, 0, 1024 * 1024 - 1);
 
@@ -60,8 +69,8 @@ namespace TCPServer
                         }
                         else
                         {
-                            res_amount = BitConverter.ToInt32(buffer,i);
-                            i+=sizeof(Int32);
+                            res_amount = BitConverter.ToInt32(buffer, i);
+                            i += sizeof(Int32);
                         }
                         int leng = BitConverter.ToInt32(buffer, i);
                         i += sizeof(int);
@@ -71,7 +80,7 @@ namespace TCPServer
                         MemoryStream ms = new MemoryStream();
                         ms.Write(buffer, i, leng);
                         Image img = Image.FromStream(ms);
-                        switch(type)
+                        switch (type)
                         {
                             case 0:
                                 img.Save(@"result.png", System.Drawing.Imaging.ImageFormat.Png);
@@ -87,17 +96,32 @@ namespace TCPServer
                                 break;
                             case 4:
                                 img.Save(@"result.gif", System.Drawing.Imaging.ImageFormat.Gif);
-                                break; 
+                                break;
                             default:
                                 break;
                         }
-
+                        handler.Close();
                         Console.WriteLine("Логин: " + login_auth);
                         Console.WriteLine("Пароль:" + password_auth);
                         Console.WriteLine("Вид результата: " + priznak);
                         Console.WriteLine("Точность" + accurancy);
                         Console.WriteLine("Размер картинки" + leng);
                         Console.WriteLine("Тип картинки" + type);
+
+                        Socket sender = new Socket(CompareSysAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                        byte[] msg = new byte[buffer.Length + bytes.Length];
+                        bytes.CopyTo(msg, 0);
+                        buffer.CopyTo(msg, bytes.Length);
+                        sender.Connect(CompareSysEndPoint);
+
+                        sender.Send(msg);
+                        sender.Close();
+                    }
+                    else
+                    {
+                        ans[0] = 0;
+                        handler.Send(ans);
+                        handler.Close();
                     }
                     /*byte[] bytes = new byte[102400];
                     int bytesRec = handler.Receive(bytes);
@@ -134,17 +158,15 @@ namespace TCPServer
                         Console.WriteLine("Сервер завершил соединение с клиентом.");
                         break;
                     }*/
-                    handler.Shutdown(SocketShutdown.Both);
-                    handler.Close();
+                    //handler.Shutdown(SocketShutdown.Both);
+                    //handler.Close();
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-            finally
-            {
-                Console.ReadLine();
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    if (handler != null && handler.Connected)
+                        handler.Close();
+                }
             }
         }
         static int signIn(string login,string pass)

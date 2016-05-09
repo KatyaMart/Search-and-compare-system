@@ -31,7 +31,7 @@ namespace TCPClient
             byte[] bytes = new byte[1024];
 
             IPHostEntry ipHost = Dns.GetHostEntry("localhost");
-            IPAddress ipAddr = ipHost.AddressList[0];
+            IPAddress ipAddr = ipHost.AddressList[1];
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
 
             Socket sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -47,11 +47,12 @@ namespace TCPClient
             int log_len = log.Length;
             byte[] password = Encoding.UTF8.GetBytes(pass_auth);
             int pas_len = password.Length;
-            byte[] mes = new byte[log_len + pas_len + 2];
-            mes[0] = (byte)log_len;
-            log.CopyTo(mes, 1);
-            mes[log_len + 1] = (byte)pas_len;
-            password.CopyTo(mes, log_len + 2);
+            byte[] mes = new byte[log_len + pas_len + 9];
+            mes[0] = 0;
+            BitConverter.GetBytes(log_len).CopyTo(mes,1);
+            log.CopyTo(mes, 5);
+            BitConverter.GetBytes(log_len).CopyTo(mes, 5+log.Length);
+            password.CopyTo(mes, log.Length+9);
             int bytesSent = sender.Send(mes);
 
             int bytesRec = sender.Receive(bytes);

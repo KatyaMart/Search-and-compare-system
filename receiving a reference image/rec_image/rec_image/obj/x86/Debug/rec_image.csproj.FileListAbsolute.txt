@@ -9,3 +9,8 @@ E:\SCSYS\rec_image\rec_image\obj\x86\Debug\rec_image.exe
 E:\SCSYS\rec_image\rec_image\obj\x86\Debug\rec_image.pdb
 E:\SCSYS\rec_image\rec_image\bin\Debug\rec_image.exe
 E:\SCSYS\rec_image\rec_image\bin\Debug\rec_image.pdb
+C:\Users\Sergey\Desktop\SCSYS\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.exe
+C:\Users\Sergey\Desktop\SCSYS\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.pdb
+C:\Users\Sergey\Desktop\SCSYS\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.exe
+C:\Users\Sergey\Desktop\SCSYS\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.pdb
+C:\Users\Sergey\Desktop\SCSYS\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.csprojResolveAssemblyReference.cache
