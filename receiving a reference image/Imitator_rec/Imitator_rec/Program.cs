@@ -51,7 +51,7 @@ namespace TCPClient
             mes[0] = 0;
             BitConverter.GetBytes(log_len).CopyTo(mes,1);
             log.CopyTo(mes, 5);
-            BitConverter.GetBytes(log_len).CopyTo(mes, 5+log.Length);
+            BitConverter.GetBytes(pas_len).CopyTo(mes, 5+log.Length);
             password.CopyTo(mes, log.Length+9);
             int bytesSent = sender.Send(mes);
 

@@ -18,7 +18,7 @@ namespace TCPServer
             IPHostEntry ipHost = Dns.GetHostEntry("localhost");
             IPAddress ipAddr = ipHost.AddressList[1];
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11000);
-            TcpListener listener = new TcpListener(ipEndPoint);
+            TcpListener listener = new TcpListener(11000);
             listener.Start();
 
             IPHostEntry CompareSysHost = Dns.GetHostEntry("localhost");

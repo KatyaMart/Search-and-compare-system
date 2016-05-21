@@ -142,22 +142,22 @@ namespace HttpServerForResult
             List<string> results = new List<string>();
             if (user == "Katya")
             {
-                results.Add("vk.com/Katya");
-                results.Add("vk.com/Ekaterina");
+                results.Add("vk.com/sutil");
+                results.Add("vk.com/aleksey2093");
             }
             else if (user == "Sergey")
             {
-                results.Add("vk.com/Sergey");
-                results.Add("vk.com/Kto-to");
+                results.Add("vk.com/sutil");
+                results.Add("vk.com/aleksey2093");
             }
             else if (user == "Gleb Andreevich")
             {
-                results.Add("vk.com/GlebUrvanov");
-                results.Add("vk.com/GlebAndreevich");
-                results.Add("facebook.com/GlebUrvanov");
+                results.Add("vk.com/id338659466");
+                results.Add("vk.com/aleksey2093");
+                results.Add("facebook.com/sutil");
             }
             else if (user == "Alexey")
-                results.Add("vk.com/AlexeyFrolov");
+                results.Add("vk.com/id338659466");
             else if (user == "Oleg")
                 results.Add("facebook.com/OlegIvanov");
             if (results.Count > 0)

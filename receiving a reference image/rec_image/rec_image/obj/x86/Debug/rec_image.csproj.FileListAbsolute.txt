@@ -14,3 +14,5 @@ C:\Users\Sergey\Desktop\SCSYS\Search-and-compare-system\receiving a reference im
 C:\Users\Sergey\Desktop\SCSYS\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.exe
 C:\Users\Sergey\Desktop\SCSYS\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.pdb
 C:\Users\Sergey\Desktop\SCSYS\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.csprojResolveAssemblyReference.cache
+C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.exe
+C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.pdb
