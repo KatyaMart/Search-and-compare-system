@@ -17,10 +17,10 @@ namespace Result_Transfer
         {
             Thread t = new Thread(ListenCompareSystem);
             t.Start();
-            IPHostEntry ipHost = Dns.GetHostEntry("localhost");
+            /*IPHostEntry ipHost = Dns.GetHostEntry("localhost");
             IPAddress ipAddr = ipHost.AddressList[1];
-            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11001);
-            TcpListener listener = new TcpListener(ipEndPoint);
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11001);*/
+            TcpListener listener = new TcpListener(11000);
             listener.Start();
             while(true)
             {
@@ -49,7 +49,10 @@ namespace Result_Transfer
                             answer.Add((byte)1);
                             for (int j = 0; j < subscribers.Count; j++)
                             {
-                                answer.AddRange(BitConverter.GetBytes(subscribers.ElementAt(j).Key));
+                                byte[] list = BitConverter.GetBytes(subscribers.ElementAt(j).Key);
+                                if (BitConverter.IsLittleEndian)
+                                    Array.Reverse(list);
+                                answer.AddRange(list);
                                 byte leng = (byte)subscribers.ElementAt(j).Value.Length;
                                 answer.Add(leng);
                                 answer.AddRange(Encoding.UTF8.GetBytes(subscribers.ElementAt(j).Value));
@@ -88,7 +91,10 @@ namespace Result_Transfer
                             {
                                 foreach (string refer in references)
                                 {
-                                    msg_list.AddRange(BitConverter.GetBytes(refer.Length));
+                                    byte[] list = BitConverter.GetBytes(refer.Length);
+                                    if (BitConverter.IsLittleEndian)
+                                        Array.Reverse(list);
+                                    msg_list.AddRange(list);
                                     msg_list.AddRange(Encoding.UTF8.GetBytes(refer));
                                 }
                             }

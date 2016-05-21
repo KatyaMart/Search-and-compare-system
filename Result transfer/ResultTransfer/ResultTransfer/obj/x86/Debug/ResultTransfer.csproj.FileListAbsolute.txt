@@ -15,3 +15,8 @@ C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-sy
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\Result transfer\ResultTransfer\ResultTransfer\obj\x86\Debug\ResultTransfer.csprojResolveAssemblyReference.cache
 C:\Users\Sergey\Desktop\SCSYS\Search-and-compare-system\Result transfer\ResultTransfer\ResultTransfer\obj\x86\Debug\ResultTransfer.exe
 C:\Users\Sergey\Desktop\SCSYS\Search-and-compare-system\Result transfer\ResultTransfer\ResultTransfer\obj\x86\Debug\ResultTransfer.pdb
+C:\Users\Сергей\Desktop\SCSYS\Search-and-compare-system\Result transfer\ResultTransfer\ResultTransfer\obj\x86\Debug\ResultTransfer.exe
+C:\Users\Сергей\Desktop\SCSYS\Search-and-compare-system\Result transfer\ResultTransfer\ResultTransfer\obj\x86\Debug\ResultTransfer.pdb
+C:\Users\Сергей\Desktop\SCSYS\Search-and-compare-system\Result transfer\ResultTransfer\ResultTransfer\obj\x86\Debug\ResultTransfer.csprojResolveAssemblyReference.cache
+C:\Users\Сергей\Desktop\SCSYS\Search-and-compare-system\Result transfer\ResultTransfer\ResultTransfer\bin\Debug\ResultTransfer.exe
+C:\Users\Сергей\Desktop\SCSYS\Search-and-compare-system\Result transfer\ResultTransfer\ResultTransfer\bin\Debug\ResultTransfer.pdb
