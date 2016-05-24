@@ -37,22 +37,19 @@ namespace HttpServerForResult
             {
                 HttpListenerContext context = server.GetContext();
                 HttpListenerRequest request = context.Request;
-                if (request.HttpMethod == "POST")
+                if (request.HttpMethod == "GET")
                 {
-                    if (!request.HasEntityBody)
-                        break;
-                    using (Stream body = request.InputStream)
-                    {
-                        DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ResultsQuery));
-                        ResultsQuery newQuery = (ResultsQuery)ser.ReadObject(body);
-                        if (newQuery.password == null)
+                    char[] separator = { '/' };
+                    string[] param = request.Url.ToString().Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                    
+                        if (param[4] == "getips")
                         {
                             IpsAnswer ans = new IpsAnswer();
-                            long[] addrs = getIPs(newQuery.login);
+                            long[] addrs = getIPs(param[4]);
                             HttpListenerResponse response = context.Response;
                             response.ContentType = "application/json";
                             MemoryStream stream = new MemoryStream();
-                            ser = new DataContractJsonSerializer(typeof(IpsAnswer));
+                            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(IpsAnswer));
                             ser.WriteObject(stream, ans);
                             response.ContentLength64 = stream.Length;
                             using (Stream output = response.OutputStream)
@@ -61,13 +58,13 @@ namespace HttpServerForResult
                                 //this.Text = "Ответ отправлен: " + ans.results.Length;
                             }
                         }
-                        else if (newQuery.neededUser != null)
+                        else if (param[4] == "lastresults")
                         {
                             ResultsAnswer ans = new ResultsAnswer();
-                            if ((newQuery.login == "Sergey" && newQuery.password == "Dunaev") || (newQuery.login == "Katya" && newQuery.password == "Martynova"))
+                            if ((param[5] == "Sergey" && param[6] == "Dunaev") || (param[5] == "Katya" && param[6] == "Martynova"))
                             {
                                 ans.access = true;
-                                ans.results = getResults(newQuery.neededUser);
+                                ans.results = getResults(param[7]);
                             }
                             else
                             {
@@ -77,7 +74,7 @@ namespace HttpServerForResult
                             HttpListenerResponse response = context.Response;
                             response.ContentType = "application/json";
                             MemoryStream stream = new MemoryStream();
-                            ser = new DataContractJsonSerializer(typeof(ResultsAnswer));
+                            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ResultsAnswer));
                             ser.WriteObject(stream, ans);
                             response.ContentLength64 = stream.Length;
                             using (Stream output = response.OutputStream)
@@ -88,15 +85,11 @@ namespace HttpServerForResult
                         }
                         else
                         {
-                            //ser = new DataContractJsonSerializer(typeof(ListSubsQuery));
-                            ListSubsQuery newSubQuery = new ListSubsQuery();
-                            newSubQuery.login = newQuery.login;
-                            newSubQuery.password = newQuery.password;
                             ListSubAnswer ans = new ListSubAnswer();
-                            if ((newSubQuery.login == "Sergey" && newSubQuery.password == "Dunaev") || (newSubQuery.login == "Katya" && newSubQuery.password == "Martynova"))
+                            if ((param[5] == "Sergey" && param[6] == "Dunaev") || (param[5] == "Katya" && param[6] == "Martynova"))
                             {
                                 ans.access = true;
-                                ans.subs = getSubscribes(newSubQuery.login);
+                                ans.subs = getSubscribes(param[5]);
                             }
                             else
                             {
@@ -106,7 +99,7 @@ namespace HttpServerForResult
                             HttpListenerResponse response = context.Response;
                             response.ContentType = "application/json";
                             MemoryStream stream = new MemoryStream();
-                            ser = new DataContractJsonSerializer(typeof(ListSubAnswer));
+                            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ListSubAnswer));
                             ser.WriteObject(stream, ans);
                             response.ContentLength64 = stream.Length;
                             using (Stream output = response.OutputStream)
@@ -115,7 +108,7 @@ namespace HttpServerForResult
                                 //this.Text = "Ответ отправлен: " + ans.subs.Count;
                             }
                         }
-                    }
+                    
                 }
             }
         }

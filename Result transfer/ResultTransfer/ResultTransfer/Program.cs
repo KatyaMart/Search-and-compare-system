@@ -8,13 +8,21 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.Runtime.Serialization.Json;
+using System.Security.Cryptography;
 
 namespace Result_Transfer
 {
     class Program
     {
+        static string BaseAddress = "http://localhost:12001/httpserver/";
+        static string baseLogin;
+        static string basePassword;
+        static int encryptionType = 0;
         static void Main(string[] args)
         {
+            string[] str = File.ReadAllLines("BaseKey.txt");
+            baseLogin = Convert.ToBase64String(AesEncruptAlg.Encrypt(Encoding.UTF8.GetBytes(str[0]), Encoding.UTF8.GetBytes(str[2])));
+            basePassword = Convert.ToBase64String(AesEncruptAlg.Encrypt(Encoding.UTF8.GetBytes(str[1]), Encoding.UTF8.GetBytes(str[2])));
             Thread t = new Thread(ListenCompareSystem);
             t.Start();
             /*IPHostEntry ipHost = Dns.GetHostEntry("localhost");
@@ -191,26 +199,18 @@ namespace Result_Transfer
         }
         static Dictionary<int,string> GetSubs(string login, string pass,out bool access)
         {
-            string url = "http://localhost:12001/httpserver/";
-            ListSubsQuery newQuery = new ListSubsQuery();
-            newQuery.login = login;
-            newQuery.password = pass;
-            MemoryStream stream = new MemoryStream();
-            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ListSubsQuery));
-            ser.WriteObject(stream, newQuery);
+            string url = BaseAddress + "users/subscriptions/" + login + "/" + pass;
+
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
+            request.Method = "GET";
+            request.Headers.Add("login:" + baseLogin);
+            request.Headers.Add("password:" + basePassword);
+            request.Headers.Add("encryption_type:" + encryptionType);
             request.ContentType = "application/json";
-            request.ContentLength = stream.Length;
-            using (Stream postStream = request.GetRequestStream())
-            {
-                postStream.Write(stream.ToArray(), 0, (Int32)stream.Length);
-                postStream.Close();
-            }
             using (HttpWebResponse responce = (HttpWebResponse)request.GetResponse())
             {
                 Stream s = responce.GetResponseStream();
-                ser = new DataContractJsonSerializer(typeof(ListSubsAnswer));
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ListSubsAnswer));
                 ListSubsAnswer ans = (ListSubsAnswer)ser.ReadObject(s);
                 responce.Close();
                 access = ans.access;
@@ -219,27 +219,18 @@ namespace Result_Transfer
         }
         static string[] GetPrevResults(string login, string pass,string user, out bool access)
         {
-            string url = "http://localhost:12001/httpserver/";
-            ResultsQuery newQuery = new ResultsQuery();
-            newQuery.login = login;
-            newQuery.password = pass;
-            newQuery.neededUser = user;
-            MemoryStream stream = new MemoryStream();
-            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ResultsQuery));
-            ser.WriteObject(stream, newQuery);
+            string url = BaseAddress + "users/lastresults/" + login + "/" + pass + "/" + user;
+
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
+            request.Method = "GET";
+            request.Headers.Add("login:" + baseLogin);
+            request.Headers.Add("password:" + basePassword);
+            request.Headers.Add("encryption_type:" + encryptionType);
             request.ContentType = "application/json";
-            request.ContentLength = stream.Length;
-            using (Stream postStream = request.GetRequestStream())
-            {
-                postStream.Write(stream.ToArray(), 0, (Int32)stream.Length);
-                postStream.Close();
-            }
             using (HttpWebResponse responce = (HttpWebResponse)request.GetResponse())
             {
                 Stream s = responce.GetResponseStream();
-                ser = new DataContractJsonSerializer(typeof(ResultsAnswer));
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ResultsAnswer));
                 ResultsAnswer ans = (ResultsAnswer)ser.ReadObject(s);
                 responce.Close();
                 access = ans.access;
@@ -248,25 +239,18 @@ namespace Result_Transfer
         }
         static long[] GetIpAddress(string login)
         {
-            string url = "http://localhost:12001/httpserver/";
-            IpsQuery newQuery = new IpsQuery();
-            newQuery.login = login;
-            MemoryStream stream = new MemoryStream();
-            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(IpsQuery));
-            ser.WriteObject(stream, newQuery);
+            string url = BaseAddress + "users/getips/" + login;
+
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
+            request.Method = "GET";
+            request.Headers.Add("login:" + baseLogin);
+            request.Headers.Add("password:" + basePassword);
+            request.Headers.Add("encryption_type:" + encryptionType);
             request.ContentType = "application/json";
-            request.ContentLength = stream.Length;
-            using (Stream postStream = request.GetRequestStream())
-            {
-                postStream.Write(stream.ToArray(), 0, (Int32)stream.Length);
-                postStream.Close();
-            }
             using (HttpWebResponse responce = (HttpWebResponse)request.GetResponse())
             {
                 Stream s = responce.GetResponseStream();
-                ser = new DataContractJsonSerializer(typeof(IpsAnswer));
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(IpsAnswer));
                 IpsAnswer ans = (IpsAnswer)ser.ReadObject(s);
                 responce.Close();
                 return ans.address;
@@ -278,29 +262,89 @@ namespace Result_Transfer
         public bool access;
         public Dictionary<int, string> subs;
     }
-    public class ListSubsQuery
+    /*public class ListSubsQuery
     {
         public string login;
         public string password;
-    }
+    }*/
     public class ResultsAnswer
     {
         public bool access;
         public string[] results;
     }
-    public class ResultsQuery
+    /*public class ResultsQuery
     {
         public string login;
         public string password;
         public string neededUser;
-    }
+    }*/
     public class IpsAnswer
     {
         public long[] address;
     }
-    public class IpsQuery
+    /*public class IpsQuery
     {
         public string login;
         
+    }*/
+    public class AesEncruptAlg
+    {
+        public static byte[] Encrypt(byte[] ENC, byte[] AES_KEY)
+        {
+            byte[] tmp;
+            byte[] buf;
+            byte[] AES_IV;
+            using (Aes AES = Aes.Create())
+            {
+                AES.KeySize = 256;
+                AES.BlockSize = 128;
+                AES.Key = AES_KEY;
+                AES.GenerateIV();
+                AES_IV = AES.IV;
+                AES.Padding = PaddingMode.ANSIX923;  //!!!The ANSIX923 padding string consists of a sequence of bytes filled with zeros before the length. 
+
+                MemoryStream MS = new MemoryStream();
+                CryptoStream CS = new CryptoStream(MS, AES.CreateEncryptor(AES.Key, AES.IV), CryptoStreamMode.Write);
+
+                CS.Write(ENC, 0, ENC.Length);
+                CS.Close();
+
+                tmp = MS.ToArray();
+                buf = new byte[tmp.Length + 16];
+                AES_IV.CopyTo(buf, 0);
+                tmp.CopyTo(buf, 16);
+                return buf;
+            }
+        }
+        public static byte[] Decrypt(byte[] DEC, byte[] AES_KEY)
+        {
+            byte[] AES_IV = new byte[16];
+            byte[] tmp = new byte[DEC.Length - 16];
+            for (int i = 0; i < 16; i++)
+            {
+                AES_IV[i] = DEC[i];
+            }
+            for (int i = 0; i < DEC.Length - 16; i++)
+            {
+                tmp[i] = DEC[i + 16];
+            }
+            using (Aes AES = Aes.Create())
+            {
+                AES.KeySize = 256;
+                AES.BlockSize = 128;
+                AES.Key = AES_KEY;
+                AES.IV = AES_IV;
+                AES.Padding = PaddingMode.ANSIX923;
+
+                MemoryStream MS = new MemoryStream();
+                CryptoStream CS = new CryptoStream(MS, AES.CreateDecryptor(AES.Key, AES.IV), CryptoStreamMode.Write);
+
+                CS.Write(tmp, 0, tmp.Length);
+                CS.Close();
+
+                return MS.ToArray();
+            }
+        }
+
     }
 }
