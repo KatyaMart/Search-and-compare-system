@@ -20,7 +20,7 @@ namespace Result_Transfer
             /*IPHostEntry ipHost = Dns.GetHostEntry("localhost");
             IPAddress ipAddr = ipHost.AddressList[1];
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11001);*/
-            TcpListener listener = new TcpListener(11000);
+            TcpListener listener = new TcpListener(11001);
             listener.Start();
             while(true)
             {

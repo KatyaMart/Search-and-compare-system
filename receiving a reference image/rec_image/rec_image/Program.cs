@@ -13,8 +13,14 @@ namespace TCPServer
 {
     class Program
     {
+        static long MAX_SIZE = 5*1024*1024;
+        static string BaseAddress = "http://localhost:12000/";
+        static string baseLogin;
+        static string basePassword;
+        static int encryptionType;
         static void Main(string[] args)
         {
+            
             IPHostEntry ipHost = Dns.GetHostEntry("localhost");
             IPAddress ipAddr = ipHost.AddressList[1];
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11000);
@@ -50,11 +56,11 @@ namespace TCPServer
 
                         ans[0] = 1;
                         handler.Send(ans);
-                        byte[] buffer = new byte[1048576];
+                        byte[] buffer = new byte[MAX_SIZE];
                         shifr = new byte[1];
                         ns = new NetworkStream(handler);
                         ns.Read(shifr, 0, 1);
-                        ns.Read(buffer, 0, 1024 * 1024 - 1);
+                        ns.Read(buffer, 0, (Int32)MAX_SIZE - 1);
 
 
                         int i = 0;
@@ -123,43 +129,7 @@ namespace TCPServer
                         handler.Send(ans);
                         handler.Close();
                     }
-                    /*byte[] bytes = new byte[102400];
-                    int bytesRec = handler.Receive(bytes);
-
-                    int log_len = (int)bytes[0];
-                    string login = Encoding.UTF8.GetString(bytes, 1, log_len);
-                    string password = Encoding.UTF8.GetString(bytes, log_len + 2, (int)bytes[log_len + 1]);
-                    //data += Encoding.UTF8.GetString(bytes, 0, bytesRec);
-                    byte[] ans = new byte[1];
-                    if (login == "ddf" && password == "1234")
-                    {
-
-                        ans[0] = 1;
-                        handler.Send(ans);
-                        bytesRec = handler.Receive(bytes);
-                        MemoryStream ms = new MemoryStream();
-                        ms.Write(bytes, 0, bytesRec);
-                        Image img = Image.FromStream(ms);
-                        img.Save(@"result.png", System.Drawing.Imaging.ImageFormat.Png);
-                        Console.Write("Получено изображение\n\n");
-
-                        string reply = "Спасибо за запрос в " + bytesRec.ToString() + "байт";
-
-                        byte[] msg = Encoding.UTF8.GetBytes(reply);
-                        handler.Send(msg);
-                    }
-                    else
-                    {
-                        ans[0] = 0;
-                        handler.Send(ans);
-                    }
-                    /*if (data.IndexOf("<TheEnd>") > -1)
-                    {
-                        Console.WriteLine("Сервер завершил соединение с клиентом.");
-                        break;
-                    }*/
-                    //handler.Shutdown(SocketShutdown.Both);
-                    //handler.Close();
+                    
                 }
                 catch (Exception ex)
                 {
@@ -171,47 +141,27 @@ namespace TCPServer
         }
         static int signIn(string login,string pass)
         {
-            string url = "http://localhost:12000/httpserver/";
-            Query newQuery = new Query();
-            newQuery.login = login;
-            newQuery.password = pass;
-            MemoryStream stream = new MemoryStream();
-            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Query));
-            ser.WriteObject(stream,newQuery);
+            string url = BaseAddress + "users/authorize/"+login+"/"+pass;
+            
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
+            request.Method = "GET";
+            request.Headers.Add("login:" + baseLogin);
+            request.Headers.Add("password:" + basePassword);
+            request.Headers.Add("encryption_type:" + encryptionType);
             request.ContentType = "application/json";
-            request.ContentLength = stream.Length;
-            using (Stream postStream = request.GetRequestStream())
-            {
-                postStream.Write(stream.ToArray(),0,(Int32)stream.Length);
-                postStream.Close();
-            }
+            
             using (HttpWebResponse responce = (HttpWebResponse)request.GetResponse())
             {
                 Stream s = responce.GetResponseStream();
-                ser = new DataContractJsonSerializer(typeof(Answer));
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Answer));
                 Answer ans  = (Answer)ser.ReadObject(s);
                 responce.Close();
                 return ans.answer;
             }
-            /*stream.Position = 0;
-            StreamReader sr = new StreamReader(stream);
-            Console.WriteLine(sr.ReadToEnd());*/
-
             return 1;
         }
     }
-    public class Query
-    {
-        public string login;
-        public string password;
-        /*public Query(string a,string b)
-        {
-            login = a;
-            password = b;
-        }*/
-    }
+    
     public class Answer
     {
         public int answer;

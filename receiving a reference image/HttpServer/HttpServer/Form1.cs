@@ -24,7 +24,7 @@ namespace HttpServer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string uri = @"http://localhost:12000/httpserver/";
+            string uri = @"http://localhost:12000/";
             StartServer(uri);
         }
         private void StartServer(string uri)
@@ -37,32 +37,28 @@ namespace HttpServer
             {
                 HttpListenerContext context = server.GetContext();
                 HttpListenerRequest request = context.Request;
-                if (request.HttpMethod == "POST")
+                if (request.HttpMethod == "GET")
                 {
-                    if (!request.HasEntityBody)
-                        break;
-                    using (Stream body = request.InputStream)
+                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Answer));
+                    Answer ans = new Answer();
+                    char[] separator = {'/'};
+                    string[] param = request.Url.ToString().Split(separator,StringSplitOptions.RemoveEmptyEntries);
+                    if ((param[4] == "Katya" && param[5] == "Martynova")||(param[4] == "Sergey" && param[5] == "Dunaev"))
+                        ans.answer = 1;
+                    else
+                        ans.answer = 0;
+                    HttpListenerResponse response = context.Response;
+                    response.ContentType = "application/json";
+                    MemoryStream stream = new MemoryStream();
+                    ser = new DataContractJsonSerializer(typeof(Answer));
+                    ser.WriteObject(stream, ans);
+                    response.ContentLength64 = stream.Length;
+                    using (Stream output = response.OutputStream)
                     {
-                        
-                        DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(Query));
-                        Query newQuery = (Query)ser.ReadObject(body);
-                        Answer ans = new Answer();
-                        if ((newQuery.login == "Katya" && newQuery.password == "Martynova")||(newQuery.login == "Sergey" && newQuery.password == "Dunaev"))
-                            ans.answer = 1;
-                        else
-                            ans.answer = 0;
-                        HttpListenerResponse response = context.Response;
-                        response.ContentType = "application/json";
-                        MemoryStream stream = new MemoryStream();
-                        ser = new DataContractJsonSerializer(typeof(Answer));
-                        ser.WriteObject(stream, ans);
-                        response.ContentLength64 = stream.Length;
-                        using (Stream output = response.OutputStream)
-                        {
-                            output.Write(stream.ToArray(), 0, (Int32)stream.Length);
-                            this.Text = "Ответ отправлен: " + ans.answer;
-                        }
+                        output.Write(stream.ToArray(), 0, (Int32)stream.Length);
+                        this.Text = "Ответ отправлен: " + ans.answer;
                     }
+                    
                 }
             }
         }
