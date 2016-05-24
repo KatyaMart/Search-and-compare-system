@@ -67,9 +67,5 @@ namespace HttpServer
     {
         public int answer;
     }
-    public class Query
-    {
-        public string login;
-        public string password;
-    }
+    
 }

@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization.Json;
-using System.Net;
+using System.Security.Cryptography;
 
 namespace TCPServer
 {
@@ -17,19 +17,24 @@ namespace TCPServer
         static string BaseAddress = "http://localhost:12000/";
         static string baseLogin;
         static string basePassword;
-        static int encryptionType;
+        static int encryptionType = 0;
+        
         static void Main(string[] args)
         {
+            string[] str = File.ReadAllLines("BaseKey.txt");
+            baseLogin = Convert.ToBase64String(AesEncruptAlg.Encrypt(Encoding.UTF8.GetBytes(str[0]), Encoding.UTF8.GetBytes(str[2])));
+            basePassword = Convert.ToBase64String(AesEncruptAlg.Encrypt(Encoding.UTF8.GetBytes(str[1]), Encoding.UTF8.GetBytes(str[2])));
+
             
-            IPHostEntry ipHost = Dns.GetHostEntry("localhost");
+            /*IPHostEntry ipHost = Dns.GetHostEntry("localhost");
             IPAddress ipAddr = ipHost.AddressList[1];
-            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11000);
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11000);*/
             TcpListener listener = new TcpListener(11000);
             listener.Start();
 
             IPHostEntry CompareSysHost = Dns.GetHostEntry("localhost");
-            IPAddress CompareSysAddr = ipHost.AddressList[1];
-            IPEndPoint CompareSysEndPoint = new IPEndPoint(ipAddr, 11004);
+            IPAddress CompareSysAddr = CompareSysHost.AddressList[1];
+            IPEndPoint CompareSysEndPoint = new IPEndPoint(CompareSysAddr, 11004);
             Socket handler = null;
             while (true)
             {
@@ -166,4 +171,65 @@ namespace TCPServer
     {
         public int answer;
     }
+    public class AesEncruptAlg
+    {
+        public static byte[] Encrypt(byte[] ENC, byte[] AES_KEY)
+        {
+            byte[] tmp;
+            byte[] buf;
+            byte[] AES_IV;
+            using (Aes AES = Aes.Create())
+            {
+                AES.KeySize = 256;
+                AES.BlockSize = 128;
+                AES.Key = AES_KEY;
+                AES.GenerateIV();
+                AES_IV = AES.IV;
+                AES.Padding = PaddingMode.ANSIX923;  //!!!The ANSIX923 padding string consists of a sequence of bytes filled with zeros before the length. 
+
+                MemoryStream MS = new MemoryStream();
+                CryptoStream CS = new CryptoStream(MS, AES.CreateEncryptor(AES.Key, AES.IV), CryptoStreamMode.Write);
+
+                CS.Write(ENC, 0, ENC.Length);
+                CS.Close();
+
+                tmp = MS.ToArray();
+                buf = new byte[tmp.Length + 16];
+                AES_IV.CopyTo(buf, 0);
+                tmp.CopyTo(buf, 16);
+                return buf;
+            }
+        }
+        public static byte[] Decrypt(byte[] DEC, byte[] AES_KEY)
+        {
+            byte[] AES_IV = new byte[16];
+            byte[] tmp = new byte[DEC.Length - 16];
+            for (int i = 0; i < 16; i++)
+            {
+                AES_IV[i] = DEC[i];
+            }
+            for (int i = 0; i < DEC.Length - 16; i++)
+            {
+                tmp[i] = DEC[i + 16];
+            }
+            using (Aes AES = Aes.Create())
+            {
+                AES.KeySize = 256;
+                AES.BlockSize = 128;
+                AES.Key = AES_KEY;
+                AES.IV = AES_IV;
+                AES.Padding = PaddingMode.ANSIX923;
+
+                MemoryStream MS = new MemoryStream();
+                CryptoStream CS = new CryptoStream(MS, AES.CreateDecryptor(AES.Key, AES.IV), CryptoStreamMode.Write);
+
+                CS.Write(tmp, 0, tmp.Length);
+                CS.Close();
+
+                return MS.ToArray();
+            }
+        }
+
+    }
+
 }
