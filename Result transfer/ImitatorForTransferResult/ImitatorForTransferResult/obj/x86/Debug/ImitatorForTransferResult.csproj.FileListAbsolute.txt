@@ -13,3 +13,15 @@ C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-sy
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\bin\Debug\ImitatorForTransferResult.exe
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\bin\Debug\ImitatorForTransferResult.pdb
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.csprojResolveAssemblyReference.cache
+F:\программирование\Search and compare subsystem\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.exe
+F:\программирование\Search and compare subsystem\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.exe
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.pdb
+G:\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.exe
+G:\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.pdb
+G:\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\bin\Debug\ImitatorForTransferResult.exe
+G:\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\bin\Debug\ImitatorForTransferResult.pdb
+G:\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\bin\Debug\ImitatorForTransferResult.exe
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\bin\Debug\ImitatorForTransferResult.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\ImitatorForTransferResult\ImitatorForTransferResult\obj\x86\Debug\ImitatorForTransferResult.csprojResolveAssemblyReference.cache

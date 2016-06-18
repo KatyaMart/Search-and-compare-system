@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.IO;
 using System.Runtime.Serialization.Json;
+using System.Security.Cryptography;
 
 namespace HttpServerForResult
 {
@@ -88,23 +89,24 @@ namespace HttpServerForResult
                             ListSubAnswer ans = new ListSubAnswer();
                             if ((param[5] == "Sergey" && param[6] == "Dunaev") || (param[5] == "Katya" && param[6] == "Martynova"))
                             {
-                                ans.access = true;
+                                ans.access = 1;
                                 ans.subs = getSubscribes(param[5]);
                             }
                             else
                             {
-                                ans.access = false;
+                                ans.access = 0;
                                 ans.subs = null;
                             }
                             HttpListenerResponse response = context.Response;
                             response.ContentType = "application/json";
-                            MemoryStream stream = new MemoryStream();
+                            /*MemoryStream stream = new MemoryStream();
                             DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ListSubAnswer));
                             ser.WriteObject(stream, ans);
-                            response.ContentLength64 = stream.Length;
+                            response.ContentLength64 = stream.Length;*/
+                            string str = "{\"access\":1,\"subs\":{\"test1\":100}}";
                             using (Stream output = response.OutputStream)
                             {
-                                output.Write(stream.ToArray(), 0, (Int32)stream.Length);
+                                output.Write(Encoding.UTF8.GetBytes(str),0,str.Length);
                                 //this.Text = "Ответ отправлен: " + ans.subs.Count;
                             }
                         }
@@ -112,21 +114,21 @@ namespace HttpServerForResult
                 }
             }
         }
-        private Dictionary<int, string> getSubscribes(string login)
+        private Dictionary<string, int> getSubscribes(string login)
         {
-            Dictionary<int, string> subs = new Dictionary<int, string>();
+            Dictionary<string, int> subs = new Dictionary<string, int>();
             if (login == "Sergey")
             {
-                subs.Add(321, "Katya");
-                subs.Add(1001, "Gleb Andreevich");
-                subs.Add(4071, "Alexey");
+                subs.Add("Katya",3122);
+                subs.Add("Gleb Andreevich",1001);
+                subs.Add( "Alexey",4071);
             }
             else if (login == "Katya")
             {
-                subs.Add(322, "Sergey");
-                subs.Add(1001, "Gleb Andreevich");
-                subs.Add(4071, "Alexey");
-                subs.Add(677, "Oleg");
+                subs.Add( "Sergey",2141);
+                subs.Add("Gleb Andreevich",1001);
+                subs.Add("Alexey",4071);
+                subs.Add("Oleg",677);
             }
             return subs;
         }
@@ -154,7 +156,14 @@ namespace HttpServerForResult
             else if (user == "Oleg")
                 results.Add("facebook.com/OlegIvanov");
             if (results.Count > 0)
-                return results.ToArray();
+            {
+                List<string> res= new List<string>();
+                foreach(string str in results)
+                {
+                    res.Add(Convert.ToBase64String(AesEncruptAlg.Encrypt(Encoding.UTF8.GetBytes(str),Encoding.UTF8.GetBytes("abcabcaabcabcabc"))));
+                }
+                return res.ToArray();
+            }
             return null;
         }
         private long[] getIPs(string login)
@@ -188,8 +197,8 @@ namespace HttpServerForResult
     }
     public class ListSubAnswer
     {
-        public bool access;
-        public Dictionary<int, string> subs;
+        public int access;
+        public Dictionary<string, int> subs;
     }
     public class ListSubsQuery
     {
@@ -214,5 +223,65 @@ namespace HttpServerForResult
     public class IpsAnswer
     {
         public long[] address;
+    }
+    public class AesEncruptAlg
+    {
+        public static byte[] Encrypt(byte[] ENC, byte[] AES_KEY)
+        {
+            byte[] tmp;
+            byte[] buf;
+            byte[] AES_IV;
+            using (Aes AES = Aes.Create())
+            {
+                AES.KeySize = 256;
+                AES.BlockSize = 128;
+                AES.Key = AES_KEY;
+                AES.GenerateIV();
+                AES_IV = AES.IV;
+                AES.Padding = PaddingMode.ANSIX923;  //!!!The ANSIX923 padding string consists of a sequence of bytes filled with zeros before the length. 
+
+                MemoryStream MS = new MemoryStream();
+                CryptoStream CS = new CryptoStream(MS, AES.CreateEncryptor(AES.Key, AES.IV), CryptoStreamMode.Write);
+
+                CS.Write(ENC, 0, ENC.Length);
+                CS.Close();
+
+                tmp = MS.ToArray();
+                buf = new byte[tmp.Length + 16];
+                AES_IV.CopyTo(buf, 0);
+                tmp.CopyTo(buf, 16);
+                return buf;
+            }
+        }
+        public static byte[] Decrypt(byte[] DEC, byte[] AES_KEY)
+        {
+            byte[] AES_IV = new byte[16];
+            byte[] tmp = new byte[DEC.Length - 16];
+            for (int i = 0; i < 16; i++)
+            {
+                AES_IV[i] = DEC[i];
+            }
+            for (int i = 0; i < DEC.Length - 16; i++)
+            {
+                tmp[i] = DEC[i + 16];
+            }
+            using (Aes AES = Aes.Create())
+            {
+                AES.KeySize = 256;
+                AES.BlockSize = 128;
+                AES.Key = AES_KEY;
+                AES.IV = AES_IV;
+                AES.Padding = PaddingMode.ANSIX923;
+
+                MemoryStream MS = new MemoryStream();
+                CryptoStream CS = new CryptoStream(MS, AES.CreateDecryptor(AES.Key, AES.IV), CryptoStreamMode.Write);
+
+                CS.Write(tmp, 0, tmp.Length);
+                CS.Close();
+
+                return MS.ToArray();
+            }
+        }
+
     }
 }

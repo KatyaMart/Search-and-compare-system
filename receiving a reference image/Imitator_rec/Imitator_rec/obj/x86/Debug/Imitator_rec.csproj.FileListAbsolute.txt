@@ -13,3 +13,14 @@ C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-sy
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.pdb
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\bin\Debug\Imitator_rec.exe
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\bin\Debug\Imitator_rec.pdb
+F:\программирование\Search and compare subsystem\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.exe
+F:\программирование\Search and compare subsystem\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.exe
+C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.pdb
+G:\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.exe
+G:\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.pdb
+G:\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\bin\Debug\Imitator_rec.exe
+G:\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\bin\Debug\Imitator_rec.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\bin\Debug\Imitator_rec.exe
+C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\bin\Debug\Imitator_rec.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\Imitator_rec\Imitator_rec\obj\x86\Debug\Imitator_rec.csprojResolveAssemblyReference.cache

@@ -23,3 +23,13 @@ C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-sy
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.Form1.resources
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.Properties.Resources.resources
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.csproj.GenerateResource.Cache
+F:\программирование\Search and compare subsystem\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.exe
+F:\программирование\Search and compare subsystem\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.exe
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.csprojResolveAssemblyReference.cache
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.Form1.resources
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.Properties.Resources.resources
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\obj\x86\Debug\HttpServerForResult.csproj.GenerateResource.Cache
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\bin\Debug\HttpServerForResult.exe
+C:\Users\Sergey\Desktop\Search-and-compare-system\Result transfer\HttpServerForResult\HttpServerForResult\bin\Debug\HttpServerForResult.pdb

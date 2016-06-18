@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpServerForResult", "HttpServerForResult\HttpServerForResult.csproj", "{C49049B8-8D03-4B8B-8C47-F04B76641560}"
 EndProject
 Global

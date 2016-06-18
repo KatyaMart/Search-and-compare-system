@@ -26,3 +26,21 @@ C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-sy
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.Form1.resources
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.Properties.Resources.resources
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.csproj.GenerateResource.Cache
+F:\программирование\Search and compare subsystem\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.exe
+F:\программирование\Search and compare subsystem\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.pdb
+F:\программирование\Search and compare subsystem\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\bin\Debug\HttpServer.exe
+F:\программирование\Search and compare subsystem\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\bin\Debug\HttpServer.pdb
+F:\программирование\Search and compare subsystem\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.csprojResolveAssemblyReference.cache
+F:\программирование\Search and compare subsystem\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.Form1.resources
+F:\программирование\Search and compare subsystem\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.Properties.Resources.resources
+F:\программирование\Search and compare subsystem\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.csproj.GenerateResource.Cache
+G:\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.exe
+G:\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.pdb
+G:\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\bin\Debug\HttpServer.exe
+G:\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\bin\Debug\HttpServer.pdb
+G:\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.csprojResolveAssemblyReference.cache
+G:\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.Form1.resources
+G:\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.Properties.Resources.resources
+G:\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.csproj.GenerateResource.Cache
+C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.exe
+C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.pdb

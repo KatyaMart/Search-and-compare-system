@@ -7,27 +7,28 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Web.Script.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Security.Cryptography;
+using System.Security.Principal;
+using System.Security.AccessControl;
 
 namespace Result_Transfer
 {
     class Program
     {
-        static string BaseAddress = "http://localhost:12001/httpserver/";
+        static string BaseAddress = "http://localhost:12001/httpserver/";/*"http://192.168.1.130:8080/";*/
         static string baseLogin;
         static string basePassword;
+        static string key = "abcabcaabcabcabc";
         static int encryptionType = 0;
         static void Main(string[] args)
         {
             string[] str = File.ReadAllLines("BaseKey.txt");
-            baseLogin = Convert.ToBase64String(AesEncruptAlg.Encrypt(Encoding.UTF8.GetBytes(str[0]), Encoding.UTF8.GetBytes(str[2])));
-            basePassword = Convert.ToBase64String(AesEncruptAlg.Encrypt(Encoding.UTF8.GetBytes(str[1]), Encoding.UTF8.GetBytes(str[2])));
+            baseLogin = str[0];
+            basePassword = str[1];
             Thread t = new Thread(ListenCompareSystem);
             t.Start();
-            /*IPHostEntry ipHost = Dns.GetHostEntry("localhost");
-            IPAddress ipAddr = ipHost.AddressList[1];
-            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, 11001);*/
             TcpListener listener = new TcpListener(11001);
             listener.Start();
             while(true)
@@ -36,47 +37,78 @@ namespace Result_Transfer
                 {
                     Socket handler = listener.AcceptSocket();
                     byte[] bytes = new byte[1024];
+                    
                     int bytesRec = handler.Receive(bytes);
-
-                    int msg_type = bytes[1];
-                    int i = 2;
+                    byte shifr = bytes[0];
+                    byte[] buffer = new byte[bytesRec-1];
+                    Array.Copy(bytes,1,buffer,0,bytesRec-1);
+                    if (shifr == 0)
+                    {
+                        bytes = AES.AES_Decrypt(buffer,Encoding.UTF8.GetBytes(key));
+                    }
+                    else if(shifr==1)
+                    {
+                        string PrivateKey, PublicKey;
+                        RSA.GetPublicAndPrivateKey(out PrivateKey,out PublicKey);
+                        bytes = RSA.DecryptData(PrivateKey,buffer);
+                    }
+                    int msg_type = bytes[0];
+                    int i = 1;
                     string login = Encoding.UTF8.GetString(bytes, i+1 , bytes[i]);
                     i += login.Length + 1;
                     string password = Encoding.UTF8.GetString(bytes, i+1 , bytes[i]);
                     if (msg_type == 1)
                     {
                         Console.WriteLine("Пользователь "+login + " запрашивает список подписок...");
-                        bool access;
+                        int access;
                         // запрос к базе
-                        Dictionary<int, string> subscribers = GetSubs(login,password,out access);
-                        if (access == true)
+                        Dictionary<string, int> subscribers = GetSubs(login,password,out access);
+                        if (access == 1)
                         {
 
                             List<byte> answer = new List<byte>();
-                            answer.Add((byte)0);
                             answer.Add((byte)1);
                             for (int j = 0; j < subscribers.Count; j++)
                             {
-                                byte[] list = BitConverter.GetBytes(subscribers.ElementAt(j).Key);
+                                byte[] list = BitConverter.GetBytes(subscribers.ElementAt(j).Value);
                                 if (BitConverter.IsLittleEndian)
                                     Array.Reverse(list);
                                 answer.AddRange(list);
-                                byte leng = (byte)subscribers.ElementAt(j).Value.Length;
+                                //answer.AddRange(BitConverter.GetBytes(subscribers.ElementAt(j).Value));
+                                byte leng = (byte)subscribers.ElementAt(j).Key.Length;
                                 answer.Add(leng);
-                                answer.AddRange(Encoding.UTF8.GetBytes(subscribers.ElementAt(j).Value));
+                                answer.AddRange(Encoding.UTF8.GetBytes(subscribers.ElementAt(j).Key));
                             }
-                            byte[] msg = answer.ToArray();
-                            int bytesSend = handler.Send(msg);
-                            if (bytesSend < msg.Length)
+                            List<byte> msg = new List<byte>();
+                            if (shifr == 0)
+                            {
+                                msg.Add((byte)0);
+                                msg.AddRange(AES.AES_Encrypt(answer.ToArray(),Encoding.UTF8.GetBytes(key)));
+                            }
+                            else if (shifr == 1)
+                            {
+                                msg.Add((byte)1);
+                                string PublicKey,PrivateKey;
+                                RSA.GetPublicAndPrivateKey(out PrivateKey,out PublicKey);
+                                msg.AddRange(RSA.EncryptData(PublicKey,answer.ToArray()));
+                            }
+                            int bytesSend = handler.Send(msg.ToArray());
+                            if (bytesSend < msg.Count)
                                 Console.WriteLine("Сообщение передалось не полностью!");
                             Console.WriteLine("Список отправлен. передано " + bytesSend + " байт");
                         }
                         else
                         {
-                            byte[] msg = new byte[2];
-                            msg[1] = (byte)101;
-                            int bytesSend = handler.Send(msg);
-                            if (bytesSend < msg.Length)
+                            List<byte> msg = new List<byte>();
+                            if (shifr == 0)
+                            {
+                                msg.Add((byte)0);
+                                byte[] buf = new byte[1];
+                                buf[0] = 101;
+                                msg.AddRange(AES.AES_Encrypt(buf, Encoding.UTF8.GetBytes(key)));
+                            }
+                            int bytesSend = handler.Send(msg.ToArray());
+                            if (bytesSend < msg.Count)
                                 Console.WriteLine("Сообщение передалось не полностью!");
                             Console.WriteLine("Доступ запрещен");
                         }
@@ -93,46 +125,58 @@ namespace Result_Transfer
                         if (access == true)
                         {
                             List<byte> msg_list = new List<byte>();
-                            msg_list.Add((byte)0);
                             msg_list.Add((byte)3);
                             if (references != null)
                             {
                                 foreach (string refer in references)
                                 {
-                                    byte[] list = BitConverter.GetBytes(refer.Length);
+                                    
+                                    byte[] decription = AesEncruptAlg.Decrypt(Convert.FromBase64String(refer),Encoding.UTF8.GetBytes(key));
+                                    byte[] list = BitConverter.GetBytes(decription.Length);
                                     if (BitConverter.IsLittleEndian)
                                         Array.Reverse(list);
                                     msg_list.AddRange(list);
-                                    msg_list.AddRange(Encoding.UTF8.GetBytes(refer));
+                                    //msg_list.AddRange(BitConverter.GetBytes(decription.Length));
+                                    msg_list.AddRange(decription);
                                 }
                             }
-                            byte[] msg = msg_list.ToArray();
                             //шифрование
+                            List<byte> msg = new List<byte>();
+                            if(shifr==0 )
+                            {
+                                msg.Add((byte)0);
+                                msg.AddRange(AES.AES_Encrypt(msg_list.ToArray(),Encoding.UTF8.GetBytes(key)));
+                            }
+                            else if (shifr == 1)
+                            {
+                                msg.Add((byte)1);
+                                string PublicKey, PrivateKey;
+                                RSA.GetPublicAndPrivateKey(out PrivateKey, out PublicKey);
+                                msg.AddRange(RSA.EncryptData(PublicKey,msg_list.ToArray()));
+                            }
+                           
 
-                            int bytesSend = handler.Send(msg);
-                            if (bytesSend < msg.Length)
+                            int bytesSend = handler.Send(msg.ToArray());
+                            if (bytesSend < msg.Count)
                                 Console.WriteLine("Сообщение передалось не полностью!");
                         }
                         else
                         {
-                            byte[] msg = new byte[2];
-                            msg[1] = (byte)103;
-                            int bytesSend = handler.Send(msg);
-                            if (bytesSend < msg.Length)
+                            List<byte> msg = new List<byte>();
+                            if (shifr == 0)
+                            {
+                                msg.Add((byte)0);
+                                byte[] buf = new byte[1];
+                                buf[0] = 103;
+                                msg.AddRange(AES.AES_Encrypt(buf, Encoding.UTF8.GetBytes(key)));
+                            }
+                            int bytesSend = handler.Send(msg.ToArray());
+                            if (bytesSend < msg.Count)
                                 Console.WriteLine("Сообщение передалось не полностью!");
                             Console.WriteLine("Доступ запрещен");
                         }
                     }
                     
-
-
-
-                    /*if (data.IndexOf("<TheEnd>") > -1)
-                    {
-                        Console.WriteLine("Сервер завершил соединение с клиентом.");
-                        break;
-                    }*/
-                    //handler.Shutdown(SocketShutdown.Both);
                     handler.Close();
                 }
                 catch (Exception ex)
@@ -160,31 +204,55 @@ namespace Result_Transfer
                     byte[] bytes = new byte[1024];
                     int bytesRec = handler.Receive(bytes);
 
-                    int leng = bytes[0];
-                    string login = Encoding.UTF8.GetString(bytes,1,leng);
-                    long[] address = GetIpAddress(login);
+                    byte leng = bytes[0];
+                    string login = Encoding.UTF8.GetString(bytes,1,(int)leng);
+                    IPAddress[] address = GetIpAddress(login);
+                    int i = 1 + login.Length;
+                    List<byte> data = new List<byte>();
+                    data.Add((byte)2);
+                    data.Add(leng);
+                    data.AddRange(Encoding.UTF8.GetBytes(login));
+                    while (i < bytesRec)
+                    {
+                        int length = BitConverter.ToInt32(bytes,i);
+                        i+=sizeof(Int32);
+                        byte[] res = Convert.FromBase64String(Encoding.UTF8.GetString(bytes, i, length));
+                        byte[] list = BitConverter.GetBytes(res.Length);
+                            if (BitConverter.IsLittleEndian)
+                                Array.Reverse(list);
+                            data.AddRange(list);
+                        data.AddRange(res);
+                        i += length;
+                    }
                     List<byte> msgList = new List<byte>();
-                    msgList.Add((byte)0);
-                    msgList.Add((byte)2);
-                    msgList.AddRange(bytes);
+                    msgList.Add((byte)encryptionType);
+                    if (encryptionType == 0)
+                    {
+                        msgList.AddRange(AES.AES_Encrypt(data.ToArray(),Encoding.UTF8.GetBytes(key)));
+                    }
+                    else if (encryptionType == 1)
+                    {
+                        string PrivateKey, PublicKey;
+                        RSA.GetPublicAndPrivateKey(out PrivateKey,out PublicKey);
+                        msgList.AddRange(RSA.EncryptData(PublicKey,data.ToArray()));
+                    }
                     if(address != null)
                     {
-                        foreach(long receiver in address)
+                        foreach(IPAddress receiver in address)
                         {
-                            IPAddress addr = new IPAddress(receiver);
-                            IPEndPoint receiverEndPoint = new IPEndPoint(ipAddr, 11002);
+                            IPEndPoint receiverEndPoint = new IPEndPoint(receiver, 11002);
                             try
                             {
-                                Socket sender = new Socket(addr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                                Socket sender = new Socket(receiver.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                                 sender.Connect(receiverEndPoint);
                                 int byteSends = sender.Send(msgList.ToArray());
                                 if (byteSends < msgList.Count)
-                                    Console.WriteLine("Сообщение для " + addr.ToString() + "отправлено неполностью");
+                                    Console.WriteLine("Сообщение для " + receiver.ToString() + "отправлено неполностью");
                                 sender.Close();
                             }
                             catch(Exception ex)
                             {
-                                Console.WriteLine(ipAddr.ToString() + "недоступен!");
+                                Console.WriteLine(receiver.ToString() + "недоступен!");
                             }
                         }
                     }
@@ -193,25 +261,29 @@ namespace Result_Transfer
                 }
                 catch (Exception ex)
                 {
-
+                    Console.WriteLine("Ошибка отправки результатов");
                 }
             }
         }
-        static Dictionary<int,string> GetSubs(string login, string pass,out bool access)
+        static Dictionary<string,int> GetSubs(string login, string pass,out int access)
         {
             string url = BaseAddress + "users/subscriptions/" + login + "/" + pass;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
-            request.Headers.Add("login:" + baseLogin);
-            request.Headers.Add("password:" + basePassword);
-            request.Headers.Add("encryption_type:" + encryptionType);
+            request.Headers.Add("login","login");
+            request.Headers.Add("password", "password");
             request.ContentType = "application/json";
             using (HttpWebResponse responce = (HttpWebResponse)request.GetResponse())
             {
-                Stream s = responce.GetResponseStream();
-                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ListSubsAnswer));
-                ListSubsAnswer ans = (ListSubsAnswer)ser.ReadObject(s);
+                Stream s = responce.GetResponseStream(); 
+                StreamReader sr = new StreamReader(s,Encoding.UTF8);
+                char[] str = new char[100];
+                sr.Read(str,0,(int)100);
+                string so = new string(str);
+                so = so.Substring(0,so.IndexOf("\0"));
+                var ser = new JavaScriptSerializer(); 
+                ListSubsAnswer ans = ser.Deserialize<ListSubsAnswer>(so);
                 responce.Close();
                 access = ans.access;
                 return ans.subs;
@@ -223,9 +295,9 @@ namespace Result_Transfer
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
-            request.Headers.Add("login:" + baseLogin);
-            request.Headers.Add("password:" + basePassword);
-            request.Headers.Add("encryption_type:" + encryptionType);
+            request.Headers.Add("login", "login");
+            request.Headers.Add("password" , "password:");
+           // request.Headers.Add("encryption_type:" + encryptionType);
             request.ContentType = "application/json";
             using (HttpWebResponse responce = (HttpWebResponse)request.GetResponse())
             {
@@ -237,15 +309,15 @@ namespace Result_Transfer
                 return ans.results;
             }
         }
-        static long[] GetIpAddress(string login)
+        static IPAddress[] GetIpAddress(string login)
         {
             string url = BaseAddress + "users/getips/" + login;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
-            request.Headers.Add("login:" + baseLogin);
-            request.Headers.Add("password:" + basePassword);
-            request.Headers.Add("encryption_type:" + encryptionType);
+            request.Headers.Add("login:",baseLogin);
+            request.Headers.Add("password:", basePassword);
+            //request.Headers.Add("encryption_type:" + encryptionType);
             request.ContentType = "application/json";
             using (HttpWebResponse responce = (HttpWebResponse)request.GetResponse())
             {
@@ -253,40 +325,31 @@ namespace Result_Transfer
                 DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(IpsAnswer));
                 IpsAnswer ans = (IpsAnswer)ser.ReadObject(s);
                 responce.Close();
-                return ans.address;
+                IPAddress[] ips = new IPAddress[ans.address.Length];
+                for (int i = 0; i < ans.address.Length; i++)
+                    ips[i] = IPAddress.Parse(ans.address[i]);
+                return ips;
             }
+            return null;
         }
     }
     public class ListSubsAnswer
     {
-        public bool access;
-        public Dictionary<int, string> subs;
+        public int access;
+        public Dictionary<string, int> subs;
     }
-    /*public class ListSubsQuery
-    {
-        public string login;
-        public string password;
-    }*/
+
     public class ResultsAnswer
     {
         public bool access;
         public string[] results;
     }
-    /*public class ResultsQuery
-    {
-        public string login;
-        public string password;
-        public string neededUser;
-    }*/
+
     public class IpsAnswer
     {
-        public long[] address;
+        public string[] address;
     }
-    /*public class IpsQuery
-    {
-        public string login;
-        
-    }*/
+
     public class AesEncruptAlg
     {
         public static byte[] Encrypt(byte[] ENC, byte[] AES_KEY)
@@ -347,4 +410,153 @@ namespace Result_Transfer
         }
 
     }
+    public class AES 
+    {
+        public static byte[] AES_Encrypt(byte[] bytesToBeEncrypted, byte[] passwordBytes)
+        {
+            byte[] encryptedBytes = null;
+
+            // Set your salt here, change it to meet your flavor:
+            // The salt bytes must be at least 8 bytes.
+            byte[] saltBytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (RijndaelManaged AES = new RijndaelManaged())
+                {
+                    AES.KeySize = 256;
+                    AES.BlockSize = 128;
+
+                    var key = new Rfc2898DeriveBytes(passwordBytes, saltBytes, 1000);
+                    AES.Key = key.GetBytes(AES.KeySize / 8);
+                    AES.IV = key.GetBytes(AES.BlockSize / 8);
+
+                    AES.Mode = CipherMode.CBC;
+
+                    using (var cs = new CryptoStream(ms, AES.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(bytesToBeEncrypted, 0, bytesToBeEncrypted.Length);
+                        cs.Close();
+                    }
+                    encryptedBytes = ms.ToArray();
+                }
+            }
+
+            return encryptedBytes;
+        }
+
+        public static byte[] AES_Decrypt(byte[] bytesToBeDecrypted, byte[] passwordBytes)
+        {
+            byte[] decryptedBytes = null;
+
+            // Set your salt here, change it to meet your flavor:
+            // The salt bytes must be at least 8 bytes.
+            byte[] saltBytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (RijndaelManaged AES = new RijndaelManaged())
+                {
+                    AES.KeySize = 256;
+                    AES.BlockSize = 128;
+
+                    var key = new Rfc2898DeriveBytes(passwordBytes, saltBytes, 1000);
+                    AES.Key = key.GetBytes(AES.KeySize / 8);
+                    AES.IV = key.GetBytes(AES.BlockSize / 8);
+
+                    AES.Mode = CipherMode.CBC;
+
+                    using (var cs = new CryptoStream(ms, AES.CreateDecryptor(), CryptoStreamMode.Write))
+                    {
+                        cs.Write(bytesToBeDecrypted, 0, bytesToBeDecrypted.Length);
+                        cs.Close();
+                    }
+                    decryptedBytes = ms.ToArray();
+                }
+            }
+
+            return decryptedBytes;
+        }
+    }
+    public class RSA
+    {
+        const string DefaultPublicKey = @"<RSAKeyValue><Modulus>npRv8HuLBHYDhQY9weocg52bpy4xPfutFYwiTq7KamdxdfKjJDf6MzYWiJf73neOdJeKG+9aP/lZGn+E7dJCm1+X94D2XHS9wvyNuivqYc9SMCSc1cRO+lvWC2iVtzxw8YYmhPR0w4fzrBv/zWr7E+QsdCwaYr8kI6DlC6dEJx0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
+
+        private const string DefaultPrivateKey =
+            @"<RSAKeyValue><Modulus>npRv8HuLBHYDhQY9weocg52bpy4xPfutFYwiTq7KamdxdfKjJDf6MzYWiJf73neOdJeKG+9aP/lZGn+E7dJCm1+X94D2XHS9wvyNuivqYc9SMCSc1cRO+lvWC2iVtzxw8YYmhPR0w4fzrBv/zWr7E+QsdCwaYr8kI6DlC6dEJx0=</Modulus><Exponent>AQAB</Exponent><P>0IGxtOeOm6TwhWmzd2ATcTLP1y95bp9tY8U0Y4w23gKIllsDO4SeGwNmvG63vzHWf+Y1D++3xMiT3l0QxMo5Jw==</P><Q>wrNxrPp2CD/jpvP4cMQq4dTI0z0/eW97cjoAYlqTovXyenFjdPUWoEme+2gQ16WhdD7wJ4W7LToxPpTRNWLgGw==</Q><DP>XUw7RTR71l9WlIv4lwjxiixvXd1LW9mQrB0Y1RZvkqXVklnFN4Oe7311Ign0xGO7lF1hDvF37GDH8a75CuVl7w==</DP><DQ>siKtub656RhTN/f1cW75cP9W8nYSMg++mSbaHSKT+0AdJsvBXEu09NgG3iw7ZKIE0y+WWAKx21JnpcNQmhCpyw==</DQ><InverseQ>VT89csWuTdl/QQICf34BXvIZM7K4cunSXbHWw7d1w6suVRk8jidvSfIr+9r4O5XtmMMRsB79fXl7zLW6t0f9dg==</InverseQ><D>A1ntt65UtMZtspz8JyH0ck+dX34Zak7sTH1GqFUHUBJZkn2LNxO7xONKvJ5Bo2TxbMNbFtYLGTkCyg2R2JjN8YQhPoxdmLGANCPQMCz8ffl9dhAN/j4lWHl0ndqYScZ4eEBopCUZpCltCC0rtL9q9TuwW9nNtoemQeIV/HZ8+z0=</D></RSAKeyValue>";
+        public static void GetPublicAndPrivateKey(out string privateKey, out string publicKey)
+        {
+            RSACryptoServiceProvider rsaCryptoServiceProvider = GetRSACryptoServiceProvider();
+            privateKey = rsaCryptoServiceProvider.ToXmlString(true);
+            publicKey = rsaCryptoServiceProvider.ToXmlString(false);
+        }
+
+        public static byte[] EncryptData(string publicKey, byte[] clearText)
+        {
+            RSACryptoServiceProvider rsaCryptoServiceProvider = GetRSACryptoServiceProvider();
+            publicKey = string.IsNullOrWhiteSpace(publicKey) ? DefaultPublicKey : publicKey;
+            rsaCryptoServiceProvider.FromXmlString(publicKey);
+            byte[] baCipherbytes = rsaCryptoServiceProvider.Encrypt(clearText, false);
+            return baCipherbytes;
+        }
+
+        public static byte[] DecryptData(string privateKey, byte[] encryptedText)
+        {
+            try
+            {
+                RSACryptoServiceProvider rsaCryptoServiceProvider = GetRSACryptoServiceProvider();
+                privateKey = string.IsNullOrWhiteSpace(privateKey) ? DefaultPrivateKey : privateKey;
+                byte[] baGetPassword = encryptedText;
+                rsaCryptoServiceProvider.FromXmlString(privateKey);
+                byte[] baPlain = rsaCryptoServiceProvider.Decrypt(baGetPassword, false);
+                return baPlain;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public void DeleteSavedKeyFromContainer(string containerName)
+        {
+            var cp = new CspParameters
+            {
+                KeyContainerName = containerName,
+                Flags = CspProviderFlags.UseMachineKeyStore
+            };
+
+            using (var rsa = new RSACryptoServiceProvider(cp))
+            {
+                rsa.PersistKeyInCsp = false;
+                rsa.Clear();
+            }
+        }
+
+        private static RSACryptoServiceProvider GetRSACryptoServiceProvider()
+        {
+            const int PROVIDER_RSA_FULL = 1;
+            const string CONTAINER_NAME = "HintDeskRSAContainer";
+
+            var cspParams = new CspParameters(PROVIDER_RSA_FULL)
+            {
+                KeyContainerName = CONTAINER_NAME,
+                Flags = CspProviderFlags.UseMachineKeyStore,
+                ProviderName = "Microsoft Strong Cryptographic Provider"
+            };
+
+
+            var sid = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+            var account = (NTAccount)sid.Translate(typeof(NTAccount));
+            if (account != null)
+            {
+                CryptoKeyAccessRule rule = new CryptoKeyAccessRule(account.Value, CryptoKeyRights.FullControl, AccessControlType.Allow);
+                cspParams.CryptoKeySecurity = new CryptoKeySecurity();
+                cspParams.CryptoKeySecurity.SetAccessRule(rule);
+            }
+
+
+            return new RSACryptoServiceProvider(1024, cspParams);
+        }
+    }
+
 }

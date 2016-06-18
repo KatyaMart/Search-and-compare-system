@@ -19,3 +19,14 @@ C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-sy
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.exe
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.pdb
 C:\Users\Сергей\Desktop\Search and compare subsystem\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.csprojResolveAssemblyReference.cache
+F:\программирование\Search and compare subsystem\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.exe
+F:\программирование\Search and compare subsystem\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.exe
+C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.exe
+C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.pdb
+C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.csprojResolveAssemblyReference.cache
+G:\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.exe
+G:\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.pdb
+G:\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.exe
+G:\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.pdb
