@@ -27,7 +27,6 @@ namespace TCPServer
             string[] str = File.ReadAllLines("BaseKey.txt");
             baseLogin = str[0];
             basePassword = str[1];
-
             TcpListener listener = new TcpListener(11000);
             listener.Start();
 
@@ -77,17 +76,18 @@ namespace TCPServer
                         shifr = new byte[1];
                         ns = new NetworkStream(handler);
                         ns.Read(shifr, 0, 1);
-                        int readed = 0;
-                        int a = 0;
+                        byte[] msg_length = new byte[4];
+                        ns.Read(msg_length,0,4);
+                        int length = BitConverter.ToInt32(msg_length,0);
+                        int readed = 0,counter =0;
                         List<byte> msg_b = new List<byte>();
-                        while (ns.DataAvailable)
+                        while (counter<length)
                         {
-                            Thread.Sleep(1);
                             readed = ns.Read(buffer, 0, (Int32)MAX_SIZE);
                             byte[] received = new byte[readed];
                             Array.Copy(buffer,received,readed);
                             msg_b.AddRange(received);
-                            a++;
+                            counter += readed;
                         }
 
                         if (shifr[0] == 0)
@@ -204,8 +204,17 @@ namespace TCPServer
     {
         public int answer;
     }
-    public class AesEncruptAlg
+    public class EncruptAlg
     {
+        public enum EncAlgType
+        {
+            AES,
+            RSA,
+            MAGMA
+        }
+        public static string keystr = "abcabcabcaabcabc";
+        public static byte[] key = Encoding.UTF8.GetBytes(keystr);
+
         public static byte[] Encrypt(byte[] ENC, byte[] AES_KEY)
         {
             byte[] tmp;
@@ -216,6 +225,7 @@ namespace TCPServer
                 AES.KeySize = 256;
                 AES.BlockSize = 128;
                 AES.Key = AES_KEY;
+                AES.Mode = CipherMode.CBC;
                 AES.GenerateIV();
                 AES_IV = AES.IV;
                 AES.Padding = PaddingMode.ANSIX923;  //!!!The ANSIX923 padding string consists of a sequence of bytes filled with zeros before the length. 
@@ -250,6 +260,7 @@ namespace TCPServer
                 AES.KeySize = 256;
                 AES.BlockSize = 128;
                 AES.Key = AES_KEY;
+                AES.Mode = CipherMode.CBC;
                 AES.IV = AES_IV;
                 AES.Padding = PaddingMode.ANSIX923;
 

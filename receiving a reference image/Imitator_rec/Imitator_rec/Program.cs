@@ -33,7 +33,7 @@ namespace TCPClient
         static void SendMessageFromSocket(int port)
         {
             byte[] bytes = new byte[1024];
-            byte shf = 1;
+            byte shf = 0;
             IPHostEntry ipHost = Dns.GetHostEntry("localhost");
             IPAddress ipAddr = ipHost.AddressList[1];
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
@@ -125,13 +125,17 @@ namespace TCPClient
                 msg_list.Add(shf);
                 if (shf == 0)
                 {
-                    msg_list.AddRange(AES.AES_Encrypt(msg, Encoding.UTF8.GetBytes(key)));
+                    byte[] buf = AES.AES_Encrypt(msg, Encoding.UTF8.GetBytes(key));
+                    msg_list.AddRange(BitConverter.GetBytes(buf.Length));
+                    msg_list.AddRange(buf);
                 }
                 else if (shf == 1)
                 {
                     string PrivateKey, PublicKey;
                     RSA.GetPublicAndPrivateKey(out PrivateKey, out PublicKey);
-                    msg_list.AddRange(RSA.EncryptData(PublicKey, msg));
+                    byte[] buf = RSA.EncryptData(PublicKey, msg);
+                    msg_list.AddRange(BitConverter.GetBytes(buf.Length));
+                    msg_list.AddRange(buf);
                 }
                 bytesSent = sender.Send(msg_list.ToArray());
                 Console.WriteLine("Сообщение отправлено, было отправлено "+ bytesSent + " байт\n");

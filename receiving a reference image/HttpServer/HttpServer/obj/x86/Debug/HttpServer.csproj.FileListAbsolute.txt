@@ -44,3 +44,5 @@ G:\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\o
 G:\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.csproj.GenerateResource.Cache
 C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.exe
 C:\Users\Sergey\Desktop\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.pdb
+C:\Users\Сергей\Desktop\Version1906\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.exe
+C:\Users\Сергей\Desktop\Version1906\Search-and-compare-system\receiving a reference image\HttpServer\HttpServer\obj\x86\Debug\HttpServer.pdb

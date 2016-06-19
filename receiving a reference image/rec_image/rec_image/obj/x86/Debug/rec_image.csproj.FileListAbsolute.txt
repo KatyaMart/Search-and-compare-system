@@ -30,3 +30,8 @@ G:\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj
 G:\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.pdb
 G:\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.exe
 G:\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.pdb
+C:\Users\Сергей\Desktop\Version1906\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.exe
+C:\Users\Сергей\Desktop\Version1906\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.pdb
+C:\Users\Сергей\Desktop\Version1906\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.exe
+C:\Users\Сергей\Desktop\Version1906\Search-and-compare-system\receiving a reference image\rec_image\rec_image\bin\Debug\rec_image.pdb
+C:\Users\Сергей\Desktop\Version1906\Search-and-compare-system\receiving a reference image\rec_image\rec_image\obj\x86\Debug\rec_image.csprojResolveAssemblyReference.cache
